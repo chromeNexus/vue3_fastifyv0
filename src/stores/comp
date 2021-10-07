@@ -1,0 +1,84 @@
+<template>
+  <div class="home">
+    <img alt="Vue logo" src="../assets/logo.png" />
+    <div :style="{ color: store.state.colorCode }" class="counter">
+      {{ store.state.counter }}
+      <!-- {{ counter }} -->
+    </div>
+    <div class="counter-squared">
+      {{ store.state.counter }}
+      <sup>2</sup> =
+      {{ store.getters.counterSquared() }}
+    </div>
+    <div class="buttons">
+      <button @click="store.methods.decreaseCounter">-</button>
+      <button @click="store.methods.increaseCounter">+</button>
+      <!-- 
+        <button @click="decreaseCounter">-</button>
+        <button @click="increaseCounter">+</button>
+        -->
+    </div>
+    <div>
+      <!--v-model="store.state.colorCode"-->
+      <input
+        v-model="colorCode"
+        placeholder="Enter color code"
+        type="text"
+      />
+    </div>
+  </div>
+</template>
+
+<script>
+// https://www.youtube.com/watch?v=_5nI4kj9brg
+// @ is an alias to /src
+//https://www.derpturkey.com/simplify-promise-chains-with-arrow-functions/
+// https://morioh.com/p/eba2e686bda4
+// https://beizhedenglong.github.io/vue-hooks-form/guide/validation.html#synchronous-validation
+// https://github.com/react-hook-form/vue-hook-form
+import { inject, computed } from "vue";
+export default {
+  name: "Home",
+  setup() {
+    // inject state from app level use with provide method
+    const store = inject("store");
+    // replaced with store.index object let counter = ref(0)
+    // move increaseCounter & decreaseCounter method to store
+    // moved to store.index
+    /*  const increaseCounter = function() {
+      store.state.value++ //replace counter.value-- | console.log("increaseCounter")
+    }
+    const decreaseCounter = ()=> store.state.value-- //counter.value--//console.log("decreaseCounter");
+       */
+    const colorCode = computed({
+      get() {
+        return store.state.colorCode;
+      },
+      set(val) {
+       // console.log(val);
+        store.methods.setColorCode(val);
+      },
+    });
+    return {
+      // increaseCounter,
+      // decreaseCounter,
+      store,
+      colorCode,
+      //counter,
+    };
+  },
+};
+</script>
+<style>
+div {
+  margin-bottom: 10px;
+}
+.counter {
+  font-size: 80px;
+}
+.buttons button {
+  font-size: 50px;
+  width: 100px;
+  margin: 0 10px;
+}
+</style>
